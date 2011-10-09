@@ -7,4 +7,5 @@ public interface Problem {
     Node getStartState();
     Node getGoalState();
     Node getNextState(ArrayList<Node> openList);
+    boolean isSolvable();
 }

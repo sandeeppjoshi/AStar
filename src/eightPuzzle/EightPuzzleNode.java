@@ -3,8 +3,6 @@ package eightPuzzle;
 import problem.Node;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class EightPuzzleNode implements Node {
 
@@ -16,14 +14,15 @@ public class EightPuzzleNode implements Node {
     int gValue;
     private int mismatchCount;
     private String moveFromParent;
-    private Map<EightPuzzleNode, String> childrenMap;
 
     public void setParent(Node parent) {
         this.parent = (EightPuzzleNode) parent;
     }
 
     public int getGValue() {
-        return gValue;
+        if (parent == null)
+            return 0;
+        return parent.getGValue()+1;
 
     }
 
@@ -42,16 +41,20 @@ public class EightPuzzleNode implements Node {
 
         EightPuzzleNode goalNode = (EightPuzzleNode)goalState;
 
+        numberOfMisplacedTiles(goalNode);
+
+        return mismatchCount;
+    }
+
+    private void numberOfMisplacedTiles(EightPuzzleNode goalNode) {
         mismatchCount = 0;
         for (int i =0; i<state[0].length;i++ ){
             for (int j = 0 ; j < state.length;j++)
             {
-               if ( state[i][j]!=goalNode.state[i][j])
+               if ( state[i][j]!=goalNode.state[i][j] && state[i][j] != 0)
                         mismatchCount++;
             }
         }
-
-        return mismatchCount;
     }
 
     public void updateWhiteTilePosition()
@@ -95,17 +98,16 @@ public class EightPuzzleNode implements Node {
 
     public ArrayList<Node> getChildren() {
 
-        ArrayList<Node> eightPuzzleNodeArrayList = new ArrayList<Node>();
+        ArrayList<Node> eightPuzzleNodeSet = new ArrayList<Node>();
         int jOffset;
         int iOffset;
         String move;
-        childrenMap = new HashMap<EightPuzzleNode, String>();
         if (whiteTilePositionJ != 0)
         {
             jOffset = -1;
             iOffset = 0;
             move = "left";
-            makeChild(eightPuzzleNodeArrayList, jOffset, iOffset ,move);
+            makeChild(eightPuzzleNodeSet, jOffset, iOffset ,move);
         }
 
         if (whiteTilePositionJ != 2)
@@ -113,24 +115,30 @@ public class EightPuzzleNode implements Node {
             jOffset = 1;
             iOffset = 0;
             move = "right";
-            makeChild(eightPuzzleNodeArrayList, jOffset, iOffset, move);
+            makeChild(eightPuzzleNodeSet, jOffset, iOffset, move);
         }
         if (whiteTilePositionI != 0)
         {
             move = "up";
             jOffset = 0;
             iOffset = -1;
-            makeChild(eightPuzzleNodeArrayList, jOffset, iOffset, move);
+            makeChild(eightPuzzleNodeSet, jOffset, iOffset, move);
         }
         if (whiteTilePositionI != 2)
         {
             move = "down";
             jOffset = 0;
             iOffset = 1;
-            makeChild(eightPuzzleNodeArrayList, jOffset, iOffset, move);
+            makeChild(eightPuzzleNodeSet, jOffset, iOffset, move);
 
         }
-        return eightPuzzleNodeArrayList;
+        return eightPuzzleNodeSet;
+    }
+
+    public String getPath() {
+        if(parent == null)
+            return "";
+        return parent.getPath()+"--->"+moveFromParent;
     }
 
     public Node getParent() {
@@ -146,14 +154,8 @@ public class EightPuzzleNode implements Node {
         eightPuzzleNodeChild.whiteTilePositionI = whiteTilePositionI + iOffset ;
         eightPuzzleNodeChild.whiteTilePositionJ = whiteTilePositionJ + jOffset ;
         eightPuzzleNodeChild.parent = this;
-        childrenMap.put(eightPuzzleNodeChild,"");
-        eightPuzzleNodeChild.setGValue(this.gValue + 1);
         eightPuzzleNodeChild.setMoveFromParent(move);
         eightPuzzleNodeArrayList.add(eightPuzzleNodeChild);
-    }
-
-    public void setGValue(int gValue) {
-        this.gValue = gValue;
     }
 
     public String getMoveFromParent() {

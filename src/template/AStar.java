@@ -4,6 +4,7 @@ import problem.Node;
 import problem.Problem;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class AStar {
 
@@ -22,6 +23,12 @@ public class AStar {
     }
 
     public void getOptimalPath(){
+        if (!problem.isSolvable())
+        {
+            System.out.println("Unsolvable");
+            return;
+        }
+
         openList.add(startState);
         Node currentState = startState;
         while (!currentState.equals(goalState))
@@ -30,15 +37,18 @@ public class AStar {
             openList.remove(currentState);
             addNewNodes(currentState);
             currentState = problem.getNextState(openList);
-            System.out.println(currentState.getMoveFromParent() + "-------->" +String.valueOf(currentState.getGValue()+currentState.getHeuristicValue(goalState)));
+            System.out.println(currentState.getPath());
+            //System.out.println(currentState.getMoveFromParent() + "-------->" +String.valueOf(currentState.getGValue() + currentState.getHeuristicValue(goalState)));
         }
-        String path="";
-        while (currentState != null)
-        {
-          path = currentState.getMoveFromParent() + " " + path;
-          currentState = currentState.getParent();
-        }
-        System.out.println(path);
+       System.out.println(currentState.getPath());
+       System.out.println(" Number of States Expanded : "+closedList.size());
+//        String path="";
+//        while (currentState != null)
+//        {
+//          path = currentState.getMoveFromParent() + " " + path;
+//          currentState = currentState.getParent();
+//        }
+//        System.out.println(path);
     }
 
     private void addNewNodes(Node currentState) {
@@ -52,11 +62,16 @@ public class AStar {
                 Node sameNode = openList.get(openList.indexOf(node));
                 if ( sameNode.getGValue() > node.getGValue())
                 {
-                        sameNode.setParent(currentState);
-                        sameNode.setGValue(currentState.getGValue()+1);
-                        sameNode
+                    sameNode.setParent(currentState);
                 }
-
+            }
+            else if (closedList.contains(node))
+            {
+                Node sameNode = closedList.get(closedList.indexOf(node));
+                if ( sameNode.getGValue() > node.getGValue())
+                {
+                    sameNode.setParent(currentState);
+                }
             }
             else {
                 openList.add(node);

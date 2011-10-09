@@ -23,7 +23,6 @@ public class EightPuzzleProblem implements Problem{
         this.startState = new EightPuzzleNode();
         this.startState.setMoveFromParent("");
         this.startState.state = eightPuzzleStartState;
-        this.startState.setGValue(1);
         this.startState.updateWhiteTilePosition();
         this.startState.parent = null;
 
@@ -51,6 +50,33 @@ public class EightPuzzleProblem implements Problem{
            }
         }
         return returnNode;
+    }
+
+    public boolean isSolvable() {
+
+        int [] list = new int[9];
+        for (int i = 0,k=0;i< 3 ; i++)
+        {
+            for (int j=0;j<3;j++,k++)
+            {
+                list[k] = startState.state[i][j];
+            }
+        }
+
+        int inversions=0;
+        for ( int i=0;i<list.length;i++)
+        {
+            for (int j=i+1;j<list.length;j++)
+            {
+
+                if ( list [i] > list[j])
+                    inversions++;
+            }
+
+        }
+        if ( inversions % 2 == 0)
+            return true;
+        return false;
     }
 
 
