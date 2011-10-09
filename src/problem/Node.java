@@ -3,6 +3,7 @@ package problem;
 import eightPuzzle.EightPuzzleNode;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Set;
 
 public interface Node {
@@ -14,7 +15,7 @@ public interface Node {
     public String getMoveFromParent();
     public void setMoveFromParent(String moveFromParent);
     public void copyState(Object stateToCopy);
-    public int getHeuristicValue(Node goalState);
+    public int getHeuristicValue(Map<Integer, String> goalState);
     public ArrayList<Node> getChildren();
     public String getPath();
     Node getParent();

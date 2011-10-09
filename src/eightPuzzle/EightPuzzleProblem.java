@@ -4,12 +4,17 @@ import problem.Node;
 import problem.Problem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EightPuzzleProblem implements Problem{
 
 
     private EightPuzzleNode startState;
     private EightPuzzleNode goalState;
+    private Map<Integer,String> goalStateMap;
+
+
 
     public void setGoalState(Object goalState) {
         int [][] eightPuzzleGoalState = ( int [][]) goalState;
@@ -33,6 +38,12 @@ public class EightPuzzleProblem implements Problem{
     }
 
     public Node getGoalState() {
+        goalStateMap = new HashMap<Integer, String>();
+        for(int i=0 ; i< goalState.state[0].length;i++){
+            for ( int j=0 ;j<goalState.state.length;j++){
+               goalStateMap.put(goalState.state[i][j],i+","+j);
+            }
+        }
         return goalState;
     }
 
@@ -42,7 +53,7 @@ public class EightPuzzleProblem implements Problem{
         Node returnNode = null;
         for (Node node : openList)
         {
-           int hValue = node.getHeuristicValue(goalState);
+           int hValue = node.getHeuristicValue(goalStateMap);
            if (min > hValue+node.getGValue())
            {
                min = hValue+node.getGValue();

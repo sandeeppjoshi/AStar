@@ -3,6 +3,7 @@ package eightPuzzle;
 import problem.Node;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class EightPuzzleNode implements Node {
 
@@ -11,7 +12,6 @@ public class EightPuzzleNode implements Node {
     int whiteTilePositionI;
     int whiteTilePositionJ;
     EightPuzzleNode parent;
-    int gValue;
     private int mismatchCount;
     private String moveFromParent;
 
@@ -37,22 +37,31 @@ public class EightPuzzleNode implements Node {
         }
     }
 
-    public int getHeuristicValue(Node goalState) {
-
-        EightPuzzleNode goalNode = (EightPuzzleNode)goalState;
-
-        numberOfMisplacedTiles(goalNode);
-
+    public int getHeuristicValue(Map<Integer, String> goalStateMap) {
+        numberOfMisplacedTiles(goalStateMap);
+        //manhattanDistance(goalStateMap);
         return mismatchCount;
     }
 
-    private void numberOfMisplacedTiles(EightPuzzleNode goalNode) {
+    private void numberOfMisplacedTiles(Map<Integer, String> goalStateMap) {
         mismatchCount = 0;
         for (int i =0; i<state[0].length;i++ ){
             for (int j = 0 ; j < state.length;j++)
             {
-               if ( state[i][j]!=goalNode.state[i][j] && state[i][j] != 0)
+               if (goalStateMap.get(state[i][j]) != i+","+j)
                         mismatchCount++;
+            }
+        }
+    }
+
+    private void manhattanDistance(Map<Integer, String> goalStateMap){
+        mismatchCount = 0;
+        for (int i =0; i<state[0].length;i++ ){
+            for (int j = 0 ; j < state.length;j++)
+            {
+               int iGoal = Integer.parseInt(goalStateMap.get(state[i][j]).split(",")[0]);
+               int jGoal = Integer.parseInt(goalStateMap.get(state[i][j]).split(",")[1]);
+               mismatchCount = mismatchCount + Math.abs(i-iGoal)+Math.abs((j-jGoal));
             }
         }
     }

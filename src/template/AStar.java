@@ -37,18 +37,9 @@ public class AStar {
             openList.remove(currentState);
             addNewNodes(currentState);
             currentState = problem.getNextState(openList);
-            System.out.println(currentState.getPath());
-            //System.out.println(currentState.getMoveFromParent() + "-------->" +String.valueOf(currentState.getGValue() + currentState.getHeuristicValue(goalState)));
         }
        System.out.println(currentState.getPath());
        System.out.println(" Number of States Expanded : "+closedList.size());
-//        String path="";
-//        while (currentState != null)
-//        {
-//          path = currentState.getMoveFromParent() + " " + path;
-//          currentState = currentState.getParent();
-//        }
-//        System.out.println(path);
     }
 
     private void addNewNodes(Node currentState) {
@@ -65,15 +56,7 @@ public class AStar {
                     sameNode.setParent(currentState);
                 }
             }
-            else if (closedList.contains(node))
-            {
-                Node sameNode = closedList.get(closedList.indexOf(node));
-                if ( sameNode.getGValue() > node.getGValue())
-                {
-                    sameNode.setParent(currentState);
-                }
-            }
-            else {
+            else if (!closedList.contains(node)) {
                 openList.add(node);
             }
         }
