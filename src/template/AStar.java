@@ -7,14 +7,18 @@ import java.util.ArrayList;
 
 public class AStar {
 
-    public Problem problem;
-    public ArrayList<Node> openList;
-    public ArrayList<Node> closedList;
-    public Node startState;
-    public Node goalState;
+    private Problem problem;
+    private ArrayList<Node> openList;
+    private ArrayList<Node> closedList;
+    private Node startState;
+    private Node goalState;
 
     public AStar(Problem problem) {
         this.problem = problem;
+        openList = new ArrayList<Node>();
+        closedList = new ArrayList<Node>();
+        startState = problem.getStartState();
+        goalState = problem.getGoalState();
     }
 
     public void getOptimalPath(){
@@ -23,10 +27,18 @@ public class AStar {
         while (!currentState.equals(goalState))
         {
             closedList.add(currentState);
-            //This shoild find children of current state,Add them to OL,update parent pointers
+            openList.remove(currentState);
             addNewNodes(currentState);
             currentState = problem.getNextState(openList);
+            System.out.println(currentState.getMoveFromParent() + "-------->" +String.valueOf(currentState.getGValue()+currentState.getHeuristicValue(goalState)));
         }
+        String path="";
+        while (currentState != null)
+        {
+          path = currentState.getMoveFromParent() + " " + path;
+          currentState = currentState.getParent();
+        }
+        System.out.println(path);
     }
 
     private void addNewNodes(Node currentState) {
@@ -34,11 +46,17 @@ public class AStar {
         ArrayList<Node> newNodesList = currentState.getChildren();
         for ( Node node : newNodesList)
         {
+
             if (openList.contains(node))
             {
                 Node sameNode = openList.get(openList.indexOf(node));
                 if ( sameNode.getGValue() > node.getGValue())
+                {
                         sameNode.setParent(currentState);
+                        sameNode.setGValue(currentState.getGValue()+1);
+                        sameNode
+                }
+
             }
             else {
                 openList.add(node);
@@ -46,8 +64,4 @@ public class AStar {
         }
 
     }
-
-
-
-
 }

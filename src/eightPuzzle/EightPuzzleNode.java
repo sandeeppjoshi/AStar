@@ -3,6 +3,8 @@ package eightPuzzle;
 import problem.Node;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EightPuzzleNode implements Node {
 
@@ -13,6 +15,8 @@ public class EightPuzzleNode implements Node {
     EightPuzzleNode parent;
     int gValue;
     private int mismatchCount;
+    private String moveFromParent;
+    private Map<EightPuzzleNode, String> childrenMap;
 
     public void setParent(Node parent) {
         this.parent = (EightPuzzleNode) parent;
@@ -21,6 +25,17 @@ public class EightPuzzleNode implements Node {
     public int getGValue() {
         return gValue;
 
+    }
+
+    public void copyState(Object stateToCopy) {
+        int [][] eightPuzzleState = (int [][])stateToCopy;
+
+        for (int i =0; i<state[0].length;i++ ){
+            for (int j = 0 ; j < state.length;j++)
+            {
+              state[i][j] = eightPuzzleState[i][j];
+            }
+        }
     }
 
     public int getHeuristicValue(Node goalState) {
@@ -75,77 +90,77 @@ public class EightPuzzleNode implements Node {
 
     @Override
     public int hashCode() {
-        int result = whiteTilePositionI;
-        result = 31 * result + whiteTilePositionJ;
-        result = 31 * result + mismatchCount;
-        return result;
+        return 0;
     }
 
     public ArrayList<Node> getChildren() {
 
         ArrayList<Node> eightPuzzleNodeArrayList = new ArrayList<Node>();
-
-
-        int newNodeState[][] = new int[3][3];
-
-
+        int jOffset;
+        int iOffset;
+        String move;
+        childrenMap = new HashMap<EightPuzzleNode, String>();
         if (whiteTilePositionJ != 0)
         {
-            newNodeState = state;
-            newNodeState[whiteTilePositionI][whiteTilePositionJ] = newNodeState[whiteTilePositionI][whiteTilePositionJ - 1];
-            newNodeState[whiteTilePositionI][whiteTilePositionJ - 1] = 0;
-            EightPuzzleNode eightPuzzleNodeLeft = new EightPuzzleNode();
-            eightPuzzleNodeLeft.state = newNodeState;
-            eightPuzzleNodeLeft.whiteTilePositionI = whiteTilePositionI;
-            eightPuzzleNodeLeft.whiteTilePositionJ = whiteTilePositionJ -1;
-            eightPuzzleNodeLeft.parent = this;
-            eightPuzzleNodeArrayList.add(eightPuzzleNodeLeft);
+            jOffset = -1;
+            iOffset = 0;
+            move = "left";
+            makeChild(eightPuzzleNodeArrayList, jOffset, iOffset ,move);
         }
 
         if (whiteTilePositionJ != 2)
         {
-            newNodeState = state;
-            newNodeState[whiteTilePositionI][whiteTilePositionJ] = newNodeState[whiteTilePositionI][whiteTilePositionJ + 1];
-            newNodeState[whiteTilePositionI][whiteTilePositionJ + 1] = 0;
-            EightPuzzleNode eightPuzzleNodeRight = new EightPuzzleNode();
-            eightPuzzleNodeRight.state = newNodeState;
-            eightPuzzleNodeRight.whiteTilePositionI = whiteTilePositionI;
-            eightPuzzleNodeRight.whiteTilePositionJ = whiteTilePositionJ +1;
-            eightPuzzleNodeRight.parent = this;
-            eightPuzzleNodeArrayList.add(eightPuzzleNodeRight);
+            jOffset = 1;
+            iOffset = 0;
+            move = "right";
+            makeChild(eightPuzzleNodeArrayList, jOffset, iOffset, move);
         }
-
-
         if (whiteTilePositionI != 0)
         {
-            newNodeState = state;
-            newNodeState[whiteTilePositionI][whiteTilePositionJ] = newNodeState[whiteTilePositionI -1][whiteTilePositionJ];
-            newNodeState[whiteTilePositionI - 1][whiteTilePositionJ] = 0;
-            EightPuzzleNode eightPuzzleNodeTop = new EightPuzzleNode();
-            eightPuzzleNodeTop.state = newNodeState;
-            eightPuzzleNodeTop.whiteTilePositionI = whiteTilePositionI - 1;
-            eightPuzzleNodeTop.whiteTilePositionJ = whiteTilePositionJ;
-            eightPuzzleNodeTop.parent = this;
-            eightPuzzleNodeArrayList.add(eightPuzzleNodeTop);
+            move = "up";
+            jOffset = 0;
+            iOffset = -1;
+            makeChild(eightPuzzleNodeArrayList, jOffset, iOffset, move);
         }
-
         if (whiteTilePositionI != 2)
         {
-            newNodeState = state;
-            newNodeState[whiteTilePositionI][whiteTilePositionJ] = newNodeState[whiteTilePositionI +1][whiteTilePositionJ];
-            newNodeState[whiteTilePositionI + 1][whiteTilePositionJ] = 0;
-            EightPuzzleNode eightPuzzleNodeDown = new EightPuzzleNode();
-            eightPuzzleNodeDown.state = newNodeState;
-            eightPuzzleNodeDown.whiteTilePositionI = whiteTilePositionI + 1;
-            eightPuzzleNodeDown.whiteTilePositionJ = whiteTilePositionJ;
-            eightPuzzleNodeDown.parent = this;
-            eightPuzzleNodeArrayList.add(eightPuzzleNodeDown);
+            move = "down";
+            jOffset = 0;
+            iOffset = 1;
+            makeChild(eightPuzzleNodeArrayList, jOffset, iOffset, move);
+
         }
-
-
-
-
-
         return eightPuzzleNodeArrayList;
+    }
+
+    public Node getParent() {
+        return parent;
+    }
+
+    private void makeChild(ArrayList<Node> eightPuzzleNodeArrayList, int jOffset, int iOffset, String move) {
+
+        EightPuzzleNode eightPuzzleNodeChild = new EightPuzzleNode();
+        eightPuzzleNodeChild.copyState(state);
+        eightPuzzleNodeChild.state[whiteTilePositionI][whiteTilePositionJ] = eightPuzzleNodeChild.state[whiteTilePositionI + iOffset][whiteTilePositionJ + jOffset];
+        eightPuzzleNodeChild.state[whiteTilePositionI + iOffset][whiteTilePositionJ + jOffset] = 0;
+        eightPuzzleNodeChild.whiteTilePositionI = whiteTilePositionI + iOffset ;
+        eightPuzzleNodeChild.whiteTilePositionJ = whiteTilePositionJ + jOffset ;
+        eightPuzzleNodeChild.parent = this;
+        childrenMap.put(eightPuzzleNodeChild,"");
+        eightPuzzleNodeChild.setGValue(this.gValue + 1);
+        eightPuzzleNodeChild.setMoveFromParent(move);
+        eightPuzzleNodeArrayList.add(eightPuzzleNodeChild);
+    }
+
+    public void setGValue(int gValue) {
+        this.gValue = gValue;
+    }
+
+    public String getMoveFromParent() {
+        return moveFromParent;
+    }
+
+    public void setMoveFromParent(String moveFromParent) {
+        this.moveFromParent = moveFromParent;
     }
 }
