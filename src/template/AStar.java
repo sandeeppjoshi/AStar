@@ -6,6 +6,8 @@ import problem.Problem;
 import java.util.ArrayList;
 import java.util.Set;
 
+import static java.lang.System.exit;
+
 public class AStar {
 
     private Problem problem;
@@ -37,6 +39,11 @@ public class AStar {
             openList.remove(currentState);
             addNewNodes(currentState);
             currentState = problem.getNextState(openList);
+            if(currentState == null)
+            {
+                System.out.println("No Solution Possible!!!");
+                exit(1);
+            }
         }
        System.out.println(currentState.getPath());
        System.out.println(" Number of States Expanded : "+closedList.size());
