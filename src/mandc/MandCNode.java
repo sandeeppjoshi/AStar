@@ -67,20 +67,13 @@ public class MandCNode implements Node{
 
     public ArrayList<Node> getChildren() {
         ArrayList<Node> mAndCNodeSet = new ArrayList<Node>();
-
-        Map<String,String> movesMap = new HashMap<String,String>();
-        movesMap.put("MC","1,1");
-        movesMap.put("M2","2,0");
-        movesMap.put("M1","1,0");
-        movesMap.put("C2","0,2");
-        movesMap.put("C1","0,1");
-        int mNumber = 0;
-        int cNumber = 0;
-        for (String move : movesMap.keySet()){
-            mNumber = Integer.parseInt(movesMap.get(move).split(",")[0]);
-            cNumber = Integer.parseInt(movesMap.get(move).split(",")[1]);
-            if(movePossible(mNumber,cNumber))
-                makeChild(mAndCNodeSet,mNumber,cNumber,state[2],move);
+        for(int m=0;m<=MandCProblem.MAXMIS;m++){
+            for(int c=0;c<=MandCProblem.MAXCAN;c++){
+                if( 0 < m+c && m+c <= MandCProblem.BOATCAPACITY ){
+                    if(movePossible(m,c))
+                        makeChild(mAndCNodeSet,m,c,state[2],"M"+m+"C"+c);
+                }
+            }
         }
         return mAndCNodeSet;
     }

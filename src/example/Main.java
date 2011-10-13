@@ -29,7 +29,7 @@ public class Main {
         //***********************UNCOMMENT FOLLOWING FOR MandC*****************************
 
         Problem mAndCProblem = new MandCProblem();
-        int [] startState = {4,4, MandCProblem.LEFT};
+        int [] startState = {20,20, MandCProblem.LEFT};
         int [] goalState = {0,0, MandCProblem.RIGHT};
         mAndCProblem.setStartState(startState);
         mAndCProblem.setGoalState(goalState);
