@@ -4,6 +4,7 @@ import problem.Node;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Random;
 
 public class EightPuzzleNode implements Node {
 
@@ -39,8 +40,18 @@ public class EightPuzzleNode implements Node {
 
     public int getHeuristicValue(Map<Integer, String> goalStateMap) {
         numberOfMisplacedTiles(goalStateMap);
-        //manhattanDistance(goalStateMap);
-        return mismatchCount;
+        manhattanDistance(goalStateMap);
+        //return mismatchCount ;
+
+        Random r = new Random();
+
+        if ( mismatchCount == 0)
+            return 0;
+        if (mismatchCount ==2 && this.getGValue() == 1)
+            return 19;
+        if (mismatchCount ==4 && this.getGValue() == 1)
+            return 1;
+        else return r.nextInt(20);
     }
 
     private void numberOfMisplacedTiles(Map<Integer, String> goalStateMap) {
@@ -119,7 +130,7 @@ public class EightPuzzleNode implements Node {
             makeChild(eightPuzzleNodeSet, jOffset, iOffset ,move);
         }
 
-        if (whiteTilePositionJ != 2)
+        if (whiteTilePositionJ != state[0].length -1)
         {
             jOffset = 1;
             iOffset = 0;
@@ -133,7 +144,7 @@ public class EightPuzzleNode implements Node {
             iOffset = -1;
             makeChild(eightPuzzleNodeSet, jOffset, iOffset, move);
         }
-        if (whiteTilePositionI != 2)
+        if (whiteTilePositionI != state[0].length -1 )
         {
             move = "down";
             jOffset = 0;
