@@ -62,8 +62,8 @@ public class MandCNode implements Node{
         Integer miCount = Integer.parseInt(goalState.get(0));
         Integer cbCount = Integer.parseInt(goalState.get(1));
         Integer boatPosition = Integer.parseInt(goalState.get(2));
-        return Math.abs(state[0]-miCount) + Math.abs(state[1] - cbCount) + Math.abs(state[2] - boatPosition) - MandCProblem.BOATCAPACITY -1 ;
-        //return 1;
+//        return Math.abs(state[0]-miCount) + Math.abs(state[1] - cbCount) + Math.abs(state[2] - boatPosition) - MandCProblem.BOATCAPACITY -1 ;
+        return 1;
     }
 
     public ArrayList<Node> getChildren() {

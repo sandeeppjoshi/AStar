@@ -40,9 +40,12 @@ public class EightPuzzleNode implements Node {
 
     public int getHeuristicValue(Map<Integer, String> goalStateMap) {
         numberOfMisplacedTiles(goalStateMap);
-        manhattanDistance(goalStateMap);
-        //return mismatchCount ;
+//        manhattanDistance(goalStateMap);
+        return mismatchCount ;
+//        return overEstimate();
+    }
 
+    private int overEstimate() {
         Random r = new Random();
 
         if ( mismatchCount == 0)

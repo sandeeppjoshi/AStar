@@ -38,6 +38,7 @@ public class AStar {
             closedList.add(currentState);
             openList.remove(currentState);
             addNewNodes(currentState);
+//            currentState = openList.get(0);
             currentState = problem.getNextState(openList);
             if(currentState == null)
             {
