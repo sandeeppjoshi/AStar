@@ -39,22 +39,33 @@ public class EightPuzzleNode implements Node {
     }
 
     public int getHeuristicValue(Map<Integer, String> goalStateMap) {
-        numberOfMisplacedTiles(goalStateMap);
-//        manhattanDistance(goalStateMap);
-        return mismatchCount ;
-//        return overEstimate();
+        //H1
+//        numberOfMisplacedTiles(goalStateMap);
+        //H2
+        manhattanDistance(goalStateMap);
+//        return mismatchCount ;
+//        return 0;
+        //H3
+        return overEstimate();
+//        H4
+//       Random random = new Random();
+//        if ( mismatchCount >0)
+//            return random.nextInt(mismatchCount);
+//        else
+//            return 0;
     }
 
     private int overEstimate() {
-        Random r = new Random();
-
-        if ( mismatchCount == 0)
-            return 0;
-        if (mismatchCount ==2 && this.getGValue() == 1)
-            return 19;
-        if (mismatchCount ==4 && this.getGValue() == 1)
-            return 1;
-        else return r.nextInt(20);
+        return mismatchCount*5000;
+//        Random r = new Random();
+//
+//        if ( mismatchCount == 0)
+//            return 0;
+//        if (mismatchCount ==2 && this.getGValue() == 1)
+//            return 19;
+//        if (mismatchCount ==4 && this.getGValue() == 1)
+//            return 1;
+//        else return r.nextInt(20);
     }
 
     private void numberOfMisplacedTiles(Map<Integer, String> goalStateMap) {

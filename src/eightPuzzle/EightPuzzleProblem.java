@@ -65,6 +65,7 @@ public class EightPuzzleProblem implements Problem{
 
     public boolean isSolvable() {
 
+
         int [] list = new int[9];
         for (int i = 0,k=0;i< 3 ; i++)
         {

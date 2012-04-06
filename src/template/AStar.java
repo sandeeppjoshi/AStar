@@ -35,7 +35,7 @@ public class AStar {
         Node currentState = startState;
         while (!currentState.equals(goalState))
         {
-            closedList.add(currentState);
+            addOrRedirect(closedList, currentState);
             openList.remove(currentState);
             addNewNodes(currentState);
 //            currentState = openList.get(0);
@@ -48,6 +48,22 @@ public class AStar {
         }
        System.out.println(currentState.getPath());
        System.out.println(" Number of States Expanded : "+closedList.size());
+    }
+
+    private void addOrRedirect(ArrayList<Node> closedList, Node currentState) {
+
+        if ( closedList.contains(currentState))
+        {
+            System.out.println(" Redirecting!");
+          Node sameNode = closedList.get(closedList.indexOf(currentState));
+          if ( sameNode.getGValue() > currentState.getGValue())
+            {
+                sameNode.setParent(currentState.getParent());
+                System.out.println("Redirection");
+            }
+        }
+        else
+            closedList.add(currentState);
     }
 
     private void addNewNodes(Node currentState) {
@@ -64,7 +80,18 @@ public class AStar {
                     sameNode.setParent(currentState);
                 }
             }
-            else if (!closedList.contains(node)) {
+//
+//            if (closedList.contains(node))
+//            {
+//                Node sameNode = closedList.get(closedList.indexOf(node));
+//                if ( sameNode.getGValue() > node.getGValue())
+//                {
+//                    System.out.print("GGGGG");
+//                    sameNode.setParent(currentState);
+//                }
+//            }
+
+            if(!closedList.contains(node)) {
                 openList.add(node);
             }
         }
